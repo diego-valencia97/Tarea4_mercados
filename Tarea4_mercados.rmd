@@ -1,51 +1,134 @@
 
 ---
+output: 
+  pdf_document:
+    includes:
+      before_body: portada.tex
+      in_header: 
+    toc: true
+    number_sections: false
+    toc_depth: 3
+  tables: true
+include-before:
+- '`\newpage{}`{=latex}'
+toc-title: Contenido
+urlcolor: blue
 header-includes:
-- \usepackage{amsmath}
+- \usepackage[nottoc]{tocbibind}
+- \renewcommand{\listfigurename}{Lista de figuras}
+- \renewcommand{\listtablename}{Lista de tablas}
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
 - \usepackage{float}
 - \usepackage{pdfpages}
-- \usepackage{caption}
-- \usepackage[spanish]{babel}\decimalpoint
-- \usepackage{lscape}
-- \DeclareUnicodeCharacter{2212}{-}
-output:
-  pdf_document: default
+
 ---
 
-
-\listoffigures
-
-\listoftables
-
 \newpage
+
+\clearpage
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=F, message=FALSE, warning=FALSE, 
                        fig.align='center', eval=T)
-```
-
-<!-- <<<<<<< HEAD -->
-
-```{r echo=F}
-# install.packages("phaseR")
-pacman::p_load(tidyverse, tinytex, kableExtra, haven, phaseR, latex2exp, dplyr, tidyr, ggplot2,readxl, writexl, plm, seasonal, tempdisagg, dynlm, fUnitRoots, readr,foreign, msm,lubridate,zoo, janitor,hexbin, magrittr, broom, fOptions, derivmkts, Hmisc, reshape, reshape2, stargazer, viridis)
+pacman::p_load(tidyverse, tinytex, kableExtra, phaseR, latex2exp, dplyr, tidyr, ggplot2,readxl, writexl, readr,foreign, msm,lubridate,zoo, janitor,hexbin, magrittr, broom, fOptions, derivmkts, Hmisc, reshape, reshape2, stargazer, viridis, readxl,  scales,
+               knitr,lubridate, ggfortify, gridExtra)
 ```
 
 
-```{r}
-
-
-dat <- read_excel("~/Desktop/Escritorio - MacBook Pro de Diego/R/t4_f.xlsx")
-
-```
-
-## Ejercicio 2
+## Ejercicio 2 Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez": [2 horas, 1 puntos cada inciso]
 
 ### (a)
 **Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
 
+```{r 2a, }
 
+siae <- readxl::read_xlsx("siae.xlsx")
+inpp <- readxl::read_xls("inpp.xls")
+inpp <- inpp[,-1]
+
+siae2 <- cbind(siae,inpp)
+siae2 <- siae2[,c(-1,-8)]
+
+siaedef <- (siae2/siae2[,47])*100
+
+
+siaet <- ts(siaedef, frequency = 12, start = c(2009,07))
+
+siaeprop <- ts((siae2[,17:47]/siae2[,17])*100,frequency = 12, start = c(2009,07))
+
+```
+
+
+Buscamos en el Sistema de Información Económica de Banco de México, en el apartado de financiamiento e información financiera de intermediarios financieros, cifras sobre las fuentes de financiamiento de la banca comercial. En la base de datos encontramos que el Banco de México divide los pasivos de la banca comercial en diversos rubros, pero los que pueden ser considerados como fuentes de financiamiento son:
+
+  - Captación: Para que las instituciones de crédito (bancos múltiples y bancos de desarrollo) cumplan su función de intermediación, requieren captar recursos, tanto del público en general, como de otros bancos y entidades no financieras. En este apartado se agregan los rubros de captación al público en general como; Depósitos de exigibilidad inmediata; Depósitos a plazo; Nóminas; entre otras. 
+  
+  - Acreedores por reporto de valores: Es una operación de crédito en virtud de la cual el reportador, en este caso la banca de desarrollo, Banco de México, y otras instituciones financieras adquieren por una suma de dinero la propiedad de títulos de crédito, y se obliga a transferir al reportado la propiedad de otros tantos títulos de la misma especie, en el plazo convenido y contra reembolso del mismo precio, más un premio. 
+  
+  - Financiamiento Interno: Importe que recibe la banca comercial en efectivo o en especie de acreedores nacionales y que son, además, motivo de autorización y registro por parte de la Secretaría de Hacienda y Crédito Público, sin importar el tipo de moneda en que se documenten.
+  
+  - Financiamiento Externo: Importe que recibe la banca comercial en efectivo o en especie de acreedores extranjeros y que son, además, motivo de autorización y registro por parte de la Secretaría de Hacienda y Crédito Público, sin importar el tipo de moneda en que se documentan.
+  
+En la siguiente gráfica se presenta el comportamiento de estos cuatro conceptos de 2009 a 2022, deflactado a julio de 2019 con el Índice Nacional de Precios al Productor (INPP) para tener precios constantes y comparables en todo el periodo.
+
+
+```{r 2ai,fig.cap="Fuentes de financiamiento de la banca comercial, 2009M07-2022M03", fig.pos='H'}
+
+options(repr.plot.width = 1, repr.plot.height = 0.75)
+autoplot(scale(siaet[,c(18,34,41,45)]),facets = FALSE) + labs(colour = "Fuentes",caption = "Nota: Series normalizadas para ser visualmente comparables") + theme(legend.position="bottom") + geom_hline(yintercept=0) 
+
+```
+  
+A pesar de que las series están normalizadas con el siguiente método $(\frac{x_i-\bar{X}}{\sigma_x})$, podemos observar su comportamiento a lo largo del periodo. Podemos notar que las fuentes de financiamiento que más aumentaron desde 2009 fueron la Captación y el financiamiento interno. Mientras que el financiamiento externo y la parte de acreedores por reporto mantuvieron un comportamiento a la baja. 
+
+Podemos ver que el comportamiento de acreedores y del financiamiento ha mantenido un comportamiento errático, terminando por debajo de su nivel inicial. Es importante destacar el comportamiento que han tenido las variables alrededor de las crisis, por ejemplo, vemos que los bajos niveles del inicio de la muestra se deben a la gran recesión de 2009. A partir de ahí vemos una recuperación paulatina, pero que con la llegada de la pandemia revertiría este comportamiento y solo la captación mantuvo su crecimiento. 
+
+Es importante hacer un análisis de la proporción que representa cada una de estas cuatro cuentas dentro de los pasivos totales de la banca comercial en México. En la siguiente figura se muestra la proporción que representa acreedores y captación (de lado izquierdo) y el financiamiento externo e interno (de lado derecho).
+ 
+
+```{r 2aii,fig.cap="Proporción del financiamiento de la banca comercial, 2009M07-2022M03", fig.pos='H'}
+
+
+p1<- autoplot(siaeprop[,c(2,18)],facets = FALSE) + labs(colour = "Fuentes",caption = "Nota: Como proporción del total de financiamiento") + theme(legend.position="bottom")
+
+p2<- autoplot(siaeprop[,c(25,29)],facets = FALSE) + labs(colour = "",caption = "") + theme(legend.position="bottom")
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+Lo primero que hay que destacar es que la dependencia del financiamiento a través de la captación por parte de la banca comercial ha ido aumentando. Captación representaba poco más del 50$\%$ del total de los pasivos al inicio, sin embargo, mantuvo una fuerte tendencia creciente que se explica también por la importante caída registrada en los demás rubros (principalmente acreedores) cerrando el período con una proporción del 71$\%$.
+
+Otra cosa que llama la atención es la poca participación que tienen los conceptos de financiamiento externo e interno sobre los pasivos totales de la banca comercial. Ambas series se comportaron como ruido blanco, es decir que oscilaron alrededor de una media. El salto que se observa en el financiamiento interno se explica por un salto que hubo del crédito que otorgó Banco de México, ya que de marzo a abril del 2020 el financiamiento creció 74 veces. Según un informe de Banco de México fue con la intención de promover un comportamiento ordenado de los mercados financieros, fortalecer los canales de otorgamiento de crédito y proveer liquidez para el sano desarrollo del sistema financiero ante la pandemia. 
+
+Lo anterior, con el fin de reducir la posibilidad de que las instituciones de la banca comercial tengan un comportamiento procíclico, y de crear las condiciones que faciliten que estas instituciones puedan cumplir su función prioritaria de proveer financiamiento a la economía, para que a su vez este pueda destinarse a las micro, pequeñas y medianas empresas, así como a los hogares que han visto una reducción transitoria de sus fuentes de ingreso. En su conjunto, las acciones aprobadas por el Banco de México apoyaron el funcionamiento del sistema financiero hasta por 750 mil millones de pesos. Al sumarse a lo ya implementado, el total fue equivalente al 3.3% del PIB de 2019. Lo anterior demuestra la preocupación de la banca central por la posibilidad de que se generen problemas de liquidez y con ello una corrida bancaria.
+
+```{r 2aiii,fig.cap="Comportamiento de las principales fuentes de financiamiento, 2009M07-2022M03", fig.pos='H'}
+
+siaecap <- ts((siaet[,18:33]/siaet[,18])*100, names = c(1:16), start=c(2009, 07), frequency=12 )
+siaeacre <- ts(((siaet[,34:40])/siaet[,34])*100, names = c(1:7),start=c(2009, 07), frequency=12)
+siaeint <- ts(((siaet[,41:44])/siaet[,41])*100, names =c(1:4),start=c(2009, 07), frequency=12)
+
+
+p3 <- autoplot(siaecap[,c(2,5,8,11,14)],facets = FALSE,ts.geom = 'bar',stacked = TRUE) + theme(legend.position="left", legend.title = element_blank())
+
+p4 <- autoplot(siaeacre[,2:7],facets = FALSE) + labs(colour = "",caption = "") + theme(legend.position="right")
+
+p5 <- autoplot(siaeacre[,2:4],facets = FALSE) + labs(colour = "",caption = "") + theme(legend.position="left")
+
+p6 <- autoplot((siaet[,45]/siaet[32,45])*100,facets = FALSE) + labs(colour = "",caption = "") + theme(legend.position="right")
+  
+grid.arrange(p3, p4, p5,p6, nrow = 2, ncol=2,  heights=c(3,3), widths=c(2,2))
+
+
+```
+
+Para complementar el análisis, presentamos la figura anterior que muestra el comportamiento de los componentes de cada una de las cuatro cuentas que contemplamos para ver el fondeo de la banca comercial. Se anexa un cuadro con los nombres correspondientes a cada número y a cada cuenta. En la esquina superior izquierda, podemos ver el comportamiento de los componentes de la captación, en donde destaca que el sector no bancario residente (mayormente depósitos a la vista), constituye cerca del 90$\%$ de los fondos, y la segunda cuenta relevante es el sector público no financiero con aproximadamente el otro 10$\%$.
+
+Para el caso de la esquina superior derecha tenemos el comportamiento de los componentes de acreedores, donde la participación se concentra en el Banco de México y la banca de desarrollo. Para el caso del financiamiento interno, también tenemos lo mismo que en el caso anterior. Finalmente, no existe una desagregación para el financiamiento externo, que se presenta en la esquina inferior derecha.
 
 ## (b)
 **Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
@@ -89,9 +172,50 @@ datb %>% select(Fecha, Consumo, Vivienda, Empresarial) %>% gather(variable, valu
 **Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y porqué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
 
 
+```{r ci,}
+
+plazo <- ts(readxl::read_xlsx("madurez.xlsx"), frequency = 12, start = c(2012,12))
+
+propplaz <- ts((plazo[,3:4]/plazo[,2])*100, frequency = 12, start = c(2012,12), names = c("Corto", "Largo"))
+
+
+
+Corto <- ((siae[,22] +  siae[,25] + siae[,28] +siae[,31] + siae[,34])/siae[,20])*100
+
+Largo <- ((siae[,23] +  siae[,26] + siae[,29] +siae[,32] + siae[,35])/siae[,20])*100
+
+pasplaz <- cbind(Corto, Largo)
+colnames(pasplaz) <- c("Corto", "Largo")
+
+pasplaz <- ts(pasplaz[42:153,], frequency = 12, start = c(2012,12))
+
+
+p7 <- autoplot(propplaz ,facets= FALSE,ts.geom = 'ribbon',stacked = TRUE) + theme(legend.title = element_blank(), legend.position = "none") 
+
+p8 <- autoplot(pasplaz ,facets= FALSE,ts.geom = 'ribbon',stacked = TRUE) + theme(legend.title = element_blank(), legend.position = "bottom") 
+
+grid.arrange(p7, p8, nrow = 1, ncol= 2)
+
+```
+
+En la gráfica del lado izquierdo se presenta la proporción de corto y largo plazo de la tenencia de emisiones de deuda en el mercado local en manos de la banca comercial. En el lado derecho, las obligaciones de la banca comercial por plazo. Supondremos que los activos en tenencia de emisiones de deuda reflejan los proyectos de inversión que realizan estas instituciones y que las obligaciones reflejan el financiamiento total que perciben. 
+
+Si analizamos el caso de las inversiones que realiza la banca comercial por tipo de periodicidad, podemos notar que aproximadamente el 85$\%$ es de largo plazo. A pesar de que no contamos con información más detallada con respecto a la madurez puntual de las inversiones, sí podemos decir que la banca comercial no puede disponer de manera inmediata de los recursos que ha prestado o comprometido. Esta alta concentración en las inversiones de largo plazo se ha mantenido para toda la muestra, ya que a pesar de que termina en un nivel menor no es una diferencia significativa. 
+
+Por otro lado, en el caso de la periodicidad de las fuentes de fondeo de la banca comercial podemos notar una alta concentración en los fondos de corto plazo. Esto quiere decir que más de la mitad de los recursos de la banca comercial provienen de fuentes de las cuales los acreedores pueden disponer de forma inmediata. Al inicio del periodo, se observa una concentración de poco más del 55$\%$ pero al final del periodo este nivel alcanza el 70$\%$.
+
+Dado el comportamiento particular de ambos casos podemos rescatar una idea central que propone el modelo Diamon-Dybvig, donde la probabilidad de una corrida bancaria aumenta en función del descalce de la madurez entre los pasivos y activos del sistema bancario. En el siguiente inciso haremos un análisis más exhaustivo de las implicaciones que puede tener que se presente a largo plazo y se fondeé a corto plazo, dentro del modelo mencionado anteriormente.
+
 ## (d)
 **Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
 
+Como mencionamos anteriormente, existe una transformación de madurez de la banca comercial, esto quiere decir que reciben fondeo de corto plazo y lo invierten en proyectos de largo plazo. A este fenómeno se le conoce como *Maturity mismatch*, lo que quiere decir que hay descalce de vencimientos. El modelo Diamond-Dybvig plantea que hay una demanda de activos que se asemejan a los depósitos a la vista tradicionales. Es decir, los activos se pueden retirar en cualquier momento.
+
+Luego muestran que, si la inversión es en proyectos de largo plazo, una institución financiera que recibe depósitos a la vista es vulnerable a las corridas bancarias. Podemos decir que, de acuerdo con el modelo, para el caso de la banca comercial mexicana se ha ido incrementando el riesgo de una corrida bancaria, ya que realiza prestamos de largo plazo, y recibe fondos de corto plazo. Entonces, cuando exista un incremento de los retiros de los depósitos en los bancos, los bancos no van a poder liquidar los fondos de inversión de largo plazo para cumplir con sus obligaciones. 
+
+Adicionalmente, deberíamos revisar cual es el valor de sus deberes y haberes, lo que nos indicaría si existe un grado de apalancamiento que aumente de forma adicional el riesgo. Por ejemplo, para marzo de 2022 el valor de las tenencias de deuda de largo plazo por parte de la banca comercial fue de 1,425 mil millones de pesos mientras que las obligaciones de corto plazo fueron por un valor de 4,752 mil millones de pesos. Notamos entonces que el grado de apalancamiento es de apenas el 30%, esto quiere decir que solo utilizan poco menos de un tercio de los fondos que recién para sus proyectos de largo plazo. En otras palabras, esto ayuda a contrastar el pronóstico que hace el modelo Diamond-Dybvig, ya que la exposición de la banca comercial no es grande. 
+
+Es probable, que en caso de una posible corrida bancaria el Banco de México inyecte liquidez suficiente para controlar el temor de los depositantes tal y como se observamos en abril de 2020.
 
 ## (e)
 **A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
@@ -158,6 +282,24 @@ ggplot(df, aes(x= fecha, y = value, color = variable, group=variable))+
 hip %>% ggplot(aes(x= fecha, y = proporcion))+ geom_area(fill = "lightpink", color = "darkblue") + theme_bw() + ylab("Proporción") + xlab("Periodo")
 ```
 
+
+
+
+\newpage
+## Anexo
+
+```{r anexo, echo= FALSE}
+
+sd <- data.frame("Núm"=2:14, "Captación" =c("No bancario residente ","","","Banca de desarrollo","","","Intermediarios financieros","","","Sector público no financiero","","","No residente"), "Acreedores"=c("Banco de México","Banca de desarrollo","Sector privado no bancario residente","Otros intermediarios"," Sector público no financiero","Sector no residente","","","","","","",""), "Interno"=c("Banco de México","Banca de desarrollo","Otros intermediarios","","","","","","","","","",""))
+
+
+
+kbl(sd, booktabs = T,  caption = "A1. Nombres de las variables") %>%
+kable_styling(position = "center",latex_options = c("striped", "hold_position"))
+
+
+
+```
 
 
 
