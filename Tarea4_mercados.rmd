@@ -1,1 +1,163 @@
 
+---
+header-includes:
+- \usepackage{amsmath}
+- \usepackage{float}
+- \usepackage{pdfpages}
+- \usepackage{caption}
+- \usepackage[spanish]{babel}\decimalpoint
+- \usepackage{lscape}
+- \DeclareUnicodeCharacter{2212}{-}
+output:
+  pdf_document: default
+---
+
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=F, message=FALSE, warning=FALSE, 
+                       fig.align='center', eval=T)
+```
+
+<!-- <<<<<<< HEAD -->
+
+```{r echo=F}
+# install.packages("phaseR")
+pacman::p_load(tidyverse, tinytex, kableExtra, haven, phaseR, latex2exp, dplyr, tidyr, ggplot2,readxl, writexl, plm, seasonal, tempdisagg, dynlm, fUnitRoots, readr,foreign, msm,lubridate,zoo, janitor,hexbin, magrittr, broom, fOptions, derivmkts, Hmisc, reshape, reshape2, stargazer, viridis)
+```
+
+
+```{r}
+
+
+dat <- read_excel("~/Desktop/Escritorio - MacBook Pro de Diego/R/t4_f.xlsx")
+
+```
+
+## Ejercicio 2
+
+### (a)
+**Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+
+
+
+
+## (b)
+**Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+
+Para el desarrollo de este inciso se utilizó información sobre la cartera vigente otorgada al sector privado no bancario . En específico, se uso la cartera vigente total por destino de crédito que se divide en las siguientes categorías:
+\begin{itemize}
+  \item Consumo
+  \item Vivienda
+  \item Empresas
+\end{itemize}
+
+Cada categoría se divide en sub-categorias, sin embargo, para este inciso solo se usan la clasificación más general. 
+
+En la figura \ref{fig:g2} podemos ver la proporción respecto a la cartera total, por tipo de crédito. Podemos destacar que la proporción se ha mantenido relativamente estable; con el crédito al consumo y el crédito a la vivienda ocupando un 25\% cada uno y el crédito empresarial un 50\%
+Además, en la figura \ref{fig:g3} vemos, en términos nominales, el monto de la cartera por tipo de crédito.
+
+  
+```{r g2,out.height="220px", fig.cap="Proporción por tipo de crédito de la cartera total", fig.pos='H', fig.width=12, fig.height= 5}
+datb  <- read_csv("ej2t4.csv") #carga de la base
+colnames(datb) <- c("Fecha","Consumo", "t_crédito", "Nómina", "Personales", "Consumo_duradero", "Otros", "Vivienda", "interes_social", "residencial", "Empresarial") #cambiamos los nombres
+#Creación de variables
+datb$Total <- datb$Consumo + datb$Vivienda + datb$Empresarial 
+datb$Prop_consumo <- datb$Consumo/datb$Total
+datb$Prop_vivienda <- datb$Vivienda/datb$Total
+datb$Prop_empresarial <- datb$Empresarial/datb$Total
+datb$Fecha <- as.Date(datb$Fecha, format = "%d/%m/%y")
+
+#gráfica
+datb %>% select(Fecha, Prop_consumo, Prop_vivienda, Prop_empresarial) %>% gather(variable, value, Prop_consumo:Prop_empresarial) %>% ggplot(aes(x= Fecha, y = value, fill= variable))+ geom_area()+ scale_fill_brewer(palette="PuRd") + ylab("Proporción") + theme_bw()
+
+```
+
+```{r g3,out.height="220px", fig.cap="Cartera de crédito", fig.pos='H', fig.width=12, fig.height= 5}
+datb %>% select(Fecha, Consumo, Vivienda, Empresarial) %>% gather(variable, value, Consumo:Empresarial) %>% ggplot(aes(x= Fecha, y = value, fill= variable))+ geom_area() + scale_fill_brewer(palette="PuRd") + theme_bw() + ylab("Proporción") + xlab("monto")
+```
+
+
+
+
+##(c)
+**Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y porqué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
+
+
+## (d)
+**Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
+
+
+## (e)
+**A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
+
+A partir de la información publicada por el Banco de México sobre la cartera vigente otorgada al sector privado no bancario (CF835), se obtuvo información sobre el crédito destinado a vivienda; que se divide en crédito a vivienda de interés social y crédito para vivienda media y residencial.
+Además, se obtuvieron datos del pib desestacionalizado a precios constantes (año base 2013) para el periodo del 2003 al 2021. De esta forma podemos comparar la cartera vigente destinada a vivienda con el PIB.
+Es importante recalcar que la cartera vigente otorgada al sector privado está dada a precios corrientes del 2019, por lo que está serie fue deflactada para llevarla a precios de 2013 y que de esta forma las series sean comparables. También, se promedio la cartera de créditos hipotecarios por trimestre ( ya que los datos son de corte mensual). 
+
+$$
+C_hipoteca_{2013} = \frac{Crédito_{t}}{IPP_{t,2013}}*100
+$$
+
+En la gráfica \ref{fig:g4} vemos el PIB y la cartera de crédito destinada a la vivienda.
+
+Además, en la figura \ref{fig:g5} se presenta la evolución del crédito hipotecario como proporción del PIB desde el año 2003. Podemos destacar el "boom´´ del crédito a la vivienda desde el 2005 hasta el 2008, pasando de un 4\% a un 8\% aproximadamente; después de ese periodo, la proporción se mantiene más estable, mostrando un crecimiento más gradual hasta el 2019 pasando del 8\% al 11\% (esta desacelaración se explica por la crisis inmobiliaria).Además, En el 2019 se aprecia una subida de la proporción del crédito hipotecario, esto gracias a la caída del PIB por la pandemia y no por un aumento de los créditos.
+```{r  }
+
+ipp <- read_csv("ipp.csv")
+pib <- read_csv("pib_t42.csv") 
+ipp$Periodo <- as.yearqtr(ipp$Periodo,"%Y/%m") 
+
+ipp <- ipp %>% #agrupamos la cartera por trimestre.
+  mutate(year = year(Periodo), Q = quarter(Periodo)) %>%
+  group_by(year, Q) %>%
+  summarise(mean(IPP))
+ipp <-unite(ipp, variables,c(1:2),  sep = "/", remove = TRUE) 
+ipp <- dplyr::rename(ipp, c( "fecha" ="variables", "IPP"="mean(IPP)"))
+ipp$fecha  <- as.yearqtr(ipp$fecha, "%Y/%q")
+ipp$indice <- (ipp$IPP/76.48502)*100
+
+
+
+hip <- datb %>% #agrupamos la cartera por trimestre.
+  mutate(year = year(Fecha), Q = quarter(Fecha)) %>%
+  group_by(year, Q) %>%
+  summarise(mean(Vivienda)) 
+
+#formato a la nueva base
+hip <-unite(hip, variables,c(1:2),  sep = "/", remove = TRUE) 
+
+hip <- dplyr::rename(hip, c("fecha"="variables", "c_hipotecario"= "mean(Vivienda)"))
+hip$fecha  <- as.yearqtr(hip$fecha, "%Y/%q")
+
+#carga del pib
+
+pib$fecha <- as.yearqtr(pib$fecha, "%Y/%q") #formato a la fecha
+hip <- merge(hip, pib, by = "fecha") #Unimos la base de datos
+hip <- merge (hip, ipp, by = "fecha")
+hip$credito_deflactado <- hip$c_hipotecario/hip$indice
+hip$proporcion <- (hip$credito_deflactado/hip$PIB)*100 #creamos variable para graficar
+
+```
+
+```{r g4, out.height="220px", fig.cap="PIB y crédito hipotecario", fig.pos='H', fig.width=12, fig.height= 5}
+df <-  melt(hip, id.vars ="fecha") 
+ggplot(df, aes(x= fecha, y = value, color = variable, group=variable))+
+  geom_line()+ theme_grey()+ xlab("Periodo")+ ylab("") + scale_y_continuous() + theme_bw()
+```
+
+
+
+
+```{r g5,out.height="220px", fig.cap="Proporción del crédito hipotecario respecto al PIB", fig.pos='H', fig.width=12, fig.height= 5}
+hip %>% ggplot(aes(x= fecha, y = proporcion))+ geom_area(fill = "lightpink", color = "darkblue") + theme_bw() + ylab("Proporción") + xlab("Periodo")
+```
+
+
+
+
