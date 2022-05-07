@@ -5,7 +5,7 @@ output:
     includes:
       before_body: portada.tex
       in_header: 
-    toc: true
+    toc: false
     number_sections: false
     toc_depth: 3
   tables: true
@@ -38,7 +38,7 @@ pacman::p_load(tidyverse, tinytex, kableExtra, phaseR, latex2exp, dplyr, tidyr, 
 ```
 
 
-## Ejercicio 2 Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez": [2 horas, 1 puntos cada inciso]
+## Ejercicio 2. Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez": [2 horas, 1 puntos cada inciso]
 
 ### (a)
 **Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
@@ -291,13 +291,19 @@ hip %>% ggplot(aes(x= fecha, y = proporcion))+ geom_area(fill = "lightpink", col
 
 ## Ejercicio 4
 
-Expectativas adaptables: Teoría sobre como las personas forman sus expectativas del futuro. Dicha teoría asume que lo hacen usando tendencias pasadas y los errores en sus propias predicciones anteriores.
+  - Expectativas adaptables: Teoría sobre como las personas forman sus expectativas del futuro. Dicha teoría asume que lo hacen usando tendencias pasadas y los errores en sus propias predicciones anteriores.
 
-Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o SUBSIDIO se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
+  - Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o SUBSIDIO se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
 
-Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una ACCIÓN se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los PRECIOS de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
+  - Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una ACCIÓN se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los PRECIOS de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
 
-
+  - Axioma: Un axioma es una verdad universal que debido a su evidencia no necesita demostración. Suele ser la base de cualquier tipo de teoría o teorema.
+  
+  - Curva de Lorenz: La curva de Lorenz es una representación gráfica de la desigualdad en el reparto de la renta existente en un determinado territorio (normalmente un país). En ella, se sitúa en el eje X los acumulados de población (P) expresados en tanto por ciento y en el eje Y los acumulados de renta (Q) expresados en tanto por ciento.
+  
+  - Curva de Beveridge: La curva de Beveridge es aquella curva que presenta la relación entre la tasa de desempleo (eje horizontal) y el número de vacantes sin cubrir respecto del total de empleos (eje vertical).
+  
+  
 \newpage
 ## Anexo
 
