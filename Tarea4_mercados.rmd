@@ -225,7 +225,7 @@ Además, se obtuvieron datos del pib desestacionalizado a precios constantes (a�
 Es importante recalcar que la cartera vigente otorgada al sector privado está dada a precios corrientes del 2019, por lo que está serie fue deflactada para llevarla a precios de 2013 y que de esta forma las series sean comparables. También, se promedio la cartera de créditos hipotecarios por trimestre ( ya que los datos son de corte mensual). 
 
 $$
-C_hipoteca_{2013} = \frac{Crédito_{t}}{IPP_{t,2013}}*100
+C_{hipoteca_{2013}} = \frac{Crédito_{t}}{IPP_{t,2013}}*100
 $$
 
 En la gráfica \ref{fig:g4} vemos el PIB y la cartera de crédito destinada a la vivienda.
@@ -270,8 +270,9 @@ hip$proporcion <- (hip$credito_deflactado/hip$PIB)*100 #creamos variable para gr
 ```
 
 ```{r g4, out.height="220px", fig.cap="PIB y crédito hipotecario", fig.pos='H', fig.width=12, fig.height= 5}
-df <-  melt(hip, id.vars ="fecha") 
-ggplot(df, aes(x= fecha, y = value, color = variable, group=variable))+
+df <- hip %>% select(fecha, PIB, c_hipotecario, credito_deflactado)
+df1 <-  melt(df, id.vars ="fecha") 
+ggplot(df1, aes(x= fecha, y = value, color = variable, group=variable))+
   geom_line()+ theme_grey()+ xlab("Periodo")+ ylab("") + scale_y_continuous() + theme_bw()
 ```
 
@@ -293,9 +294,9 @@ hip %>% ggplot(aes(x= fecha, y = proporcion))+ geom_area(fill = "lightpink", col
 
   - Expectativas adaptables: Teoría sobre como las personas forman sus expectativas del futuro. Dicha teoría asume que lo hacen usando tendencias pasadas y los errores en sus propias predicciones anteriores.
 
-  - Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o SUBSIDIO se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
+  - Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o subsidio se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
 
-  - Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una ACCIÓN se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los PRECIOS de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
+  - Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una acción se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los precios de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
 
   - Axioma: Un axioma es una verdad universal que debido a su evidencia no necesita demostración. Suele ser la base de cualquier tipo de teoría o teorema.
   
