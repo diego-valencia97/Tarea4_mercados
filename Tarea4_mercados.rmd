@@ -230,7 +230,7 @@ $$
 
 En la gráfica \ref{fig:g4} vemos el PIB y la cartera de crédito destinada a la vivienda.
 
-Además, en la figura \ref{fig:g5} se presenta la evolución del crédito hipotecario como proporción del PIB desde el año 2003. Podemos destacar el "boom´´ del crédito a la vivienda desde el 2005 hasta el 2008, pasando de un 4\% a un 8\% aproximadamente; después de ese periodo, la proporción se mantiene más estable, mostrando un crecimiento más gradual hasta el 2019 pasando del 8\% al 11\% (esta desacelaración se explica por la crisis inmobiliaria).Además, En el 2019 se aprecia una subida de la proporción del crédito hipotecario, esto gracias a la caída del PIB por la pandemia y no por un aumento de los créditos.
+Además, en la figura \ref{fig:g5} se presenta la evolución del crédito hipotecario como proporción del PIB desde el año 2003. Podemos destacar el "boom´´ del crédito a la vivienda desde el 2005 hasta el 2008, pasando de un 1.4\% a un 2.6\% aproximadamente; después de ese periodo, la proporción se mantiene más estable, mostrando un crecimiento más gradual hasta el 2019 pasando del 2.6\% al 3.5\% (esta desacelaración se explica por la crisis inmobiliaria).Además, En el 2019 se aprecia una subida de la proporción del crédito hipotecario, esto gracias a la caída del PIB por la pandemia y no por un aumento de los créditos.
 ```{r  }
 
 ipp <- read_csv("ipp.csv")
