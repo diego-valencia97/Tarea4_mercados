@@ -22,7 +22,7 @@ header-includes:
 - \usepackage{graphicx}
 - \usepackage{float}
 - \usepackage{pdfpages}
-
+- \usepackage{pdfpages}
 ---
 
 \newpage
@@ -285,6 +285,19 @@ hip %>% ggplot(aes(x= fecha, y = proporcion))+ geom_area(fill = "lightpink", col
 
 
 
+
+
+\includepdf[pages={-}]{T4_Ejercicio3.pdf}
+
+## Ejercicio 4
+
+Expectativas adaptables: Teoría sobre como las personas forman sus expectativas del futuro. Dicha teoría asume que lo hacen usando tendencias pasadas y los errores en sus propias predicciones anteriores.
+
+Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o SUBSIDIO se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
+
+Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una ACCIÓN se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los PRECIOS de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
+
+
 \newpage
 ## Anexo
 
@@ -300,12 +313,4 @@ kable_styling(position = "center",latex_options = c("striped", "hold_position"))
 
 
 ```
-
-## Ejercicio 4
-
-Expectativas adaptables: Teoría sobre como las personas forman sus expectativas del futuro. Dicha teoría asume que lo hacen usando tendencias pasadas y los errores en sus propias predicciones anteriores.
-
-Deadweight cost/loss: La medida en que el valor y el impacto de un impuesto, desgravación fiscal o SUBSIDIO se reducen debido a sus efectos secundarios. Por ejemplo, aumentar la cantidad de impuestos que gravan el salario de los trabajadores hará que algunos trabajadores dejen de trabajar o trabajen menos, lo que reducirá la cantidad de impuestos adicionales que se recaudarán. Sin embargo, crear una desgravación fiscal o un subsidio para alentar a las personas a comprar un seguro de vida tendría un costo de peso muerto porque las personas que habrían comprado un seguro de todos modos se beneficiarían.
-
-Derivados: activos financieros que 'derivan' su valor de otros activos. Por ejemplo, una opción para comprar una ACCIÓN se deriva de la acción. Algunos políticos y otros responsables de la regulación financiera culpan al creciente uso de derivados de aumentar la volatilidad en los PRECIOS de los activos, y de ser una fuente de peligro para sus usuarios. Los economistas en su mayoría consideran que los derivados son algo bueno, ya que permiten una fijación de precios más precisa del riesgo financiero y una mejor gestión del riesgo. Sin embargo, admiten que cuando los derivados se utilizan indebidamente, el apalancamiento que suele ser una parte integral de ellos puede tener consecuencias devastadoras.
 
