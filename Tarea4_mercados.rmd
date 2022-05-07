@@ -37,6 +37,119 @@ pacman::p_load(tidyverse, tinytex, kableExtra, phaseR, latex2exp, dplyr, tidyr, 
                knitr,lubridate, ggfortify, gridExtra)
 ```
 
+## Ejercicio 1. Resuelva los ejercicios 10.4 y 10.5 (5a edición). Realice estos con ayuda de su laboratorista y entregue las soluciones escritas a máquina, utilizando LaTeX. [1 hora, 1 punto cada pregunta]
+
+### 10.4. A simpler approach to agency costs: limited pledgeability. (Lacker and Weinberg, 1989; Holmström and Tirole, 1998.) Consider the model of Section 10.2 with a different friction: there is no cost of verifying output, but the entrepreneur can hide fraction $1-f$ of the project’s output from the investor (with $0 \leq f \leq 1)$. Thus the  entrepreneur can only credibly promise to repay fraction $f$ of the project’s output.
+
+#### (a) Consider a project with expected payoff $\gamma$ that exceeds $1+r$. What is the condition for the project  to be undertaken?
+
+Como $\gamma > 1+r$ por hipótesis, el proyecto es socialmente deseable.
+
+Recordamos que el producto esperado cumple $Y \sim (o, 2\gamma)$. Si denotamos por $G^E$ a la variable que denota las ganancias netas del empresario,por $G^B$ a la correspondiente al banquero y por $pago$ la cantidad que se le da al banquero cumplido el proyecto, tenemos que para que el proyecto se realice debe ser más rentable que invertir en el activo no riesgoso para ambos agentes. 
+
+
+$$
+E(G^E)\geq (1+r)W
+\leftrightarrow
+E(Y-pago)\geq (1+r)W
+\leftrightarrow
+\gamma-E(pago) \geq (1+r)W
+\leftrightarrow
+\gamma- (1+r)W \geq E(pago).
+$$
+Por otro lado, observamos que la siguiente restricción se cumple con igualdad pues al haber múltiples inversores, *i.e* competencia, la tasa de retorno de la inversión es r.
+$$
+E(G^B)\
+=
+(1+r)(1-W)
+\leftrightarrow
+E(pago-costo_{ver})
+=
+(1+r)(1-W)
+$$
+$$
+\leftrightarrow
+E(pago)=(1+r)(1-W)+costo_{ver}=(1+r)(1-W).
+$$
+Si sustituimos esta igualdad en la desigualdad de arriba, obtenemos que la condición está dada por la hipótesis del problema.
+$$
+\gamma- (1+r)W \geq (1+r)(1-W)
+\leftrightarrow
+\gamma\geq 1+r.
+$$
+Por otro latro, debe cumplirse que $R ^{max}\geq (1+r)(1-W)$.
+
+#### (b) Suppose the condition you found in part (a) is satisfied with strict inequality. Is the contract between the investor and the entrepreneur uniquely determined? If so, what is the contract? If not, explain why.
+Es fácil ver que el contrato tiene la siguiente forma: el banquero siempre revisa pues no es costoso, pero esto sólo tiene sentido en [0, (1+r)(1-W)], pues en el extremo derecho ya se le regresa el valor de su préstamo. Por otro lado, al empresario siempre le conviene quedarse con $(1-f)Y$, pues si no lo hace no estaría maximizando beneficios. 
+
+Como el inversor verifica siempre, el contrato no puede ser que el pago $Q_1$ correspondiente al output $Y_1$ sea distinto de $Y_1f$. No es creíble que prometa pagar menos pues el banquero siempre verifica. Tampoco es creíble que decida pagar más, pues el banquero no sabría la diferencia de no pagarle (análogo al argumento del libro).
+
+Así, el pago esperado máximo del banquero es $E(Yf)=\gamma f$. Como la lógica es análoga, esto se verifica sustituyendo en la función dada en el libro: $R^{MAX}=R(2\gamma-c)=\left( \frac{2\gamma f}{2\gamma f}\right)^2\gamma f= \gamma f$. 
+
+Es un contrato único pues es análogo al del libro, como si tomáramos $\gamma'=\gamma f$ y $c=0$, por lo que los mismos argumentos de determinación funcionan.
+
+
+#### (c) Limited pledgeability leads to inefficiency (relative to the case of no frictions) if $\gamma > 1+r$ but the project is not undertaken. Describe whether each of the following can cause a project with $\gamma > 1+r$ not to be undertaken:
+
+##### (i) A fall in the entrepreneur’s wealth, $W$.
+Si cae la riqueza del emprendedor, aumenta el riesgo de que no pague, por lo que sube la ventaja comparativa para el banquero de la inversión segura y esto causa más ineficiencia.
+Es decir, se endurece la restricción de participación del banquero, si $\gamma f \geq (1+r)(1-W_1)$, y su riqueza cae de $W_1$ a $W_2$, ya no es seguro que $\gamma f \geq (1+r)(1-W_2)$.
+
+Curiosamente, la apropiación a escondidas de la producción del proyecto por parte del emprendedor juega en contra de su préstamo, pues si la fracción con la que se queda decreciera, se podría compensar la caída en su riqueza.
+
+##### (ii) An increase in the fraction of the project the entrepreneur can hide, $1-f$ (that is, a fall in $f$ ).
+Este caso es análogo al anterior, si $f_1$ decrece a $f_2$, pasamos de la restricción inicial cierta del banquero $\gamma f_1 \geq (1+r)(1-W)$ a ya no saber si se cumple $\gamma f_2 \geq (1+r)(1-W)$, por lo que también puede hacer que un proyecto que antes era factible ya no se pueda llevar a cabo.
+
+
+
+##### (iii) An increase in idiosyncratic risk. Concretely, suppose that (as in part (d) of Problem 10.3), the output of the project is distributed uniformly on $[\gamma - b, \gamma + b]$ rather than uniformly on $[0, 2\gamma ]$, and there is an increase in $b$.
+Si aumenta el riesgo idiosincrático, notamos que $[\gamma-b_1,\gamma+b_1] \subset [\gamma-b_2,\gamma+b_2]$, por lo que la intuición es que los proyectos factibles bajo la primera distribución lo son bajo la segunda.
+
+Si utilizamos la función de rendimientos para encontrar el máximo, tenemos que para $\gamma - b\leq D \gamma + b$
+
+$$
+R(D)=\frac{(\gamma+b)f-(\gamma - b)f-D}{2bf} D+ \frac{D}{2bf}\left(\frac{D}{2}\right)
+=
+\frac{2b-D}{2b}D+\frac{D}{2bf}\frac{D}{2}
+$$
+Es decir, b funge como el análisis com gamma. Así, si b aumenta, la restricción para prestar del inversionista $b f \geq (1+r)(1-W)$ se suaviza, por lo que ningún proyecto se abandona con este cambio.
+
+### 10.5. 
+
+#### (a) Show that in the model analyzed in equations (10.15) (10.23) of Section 10.4, the unconditional distributions of $C_a^{2t}$ and $C_n^{2t}$ are not normal.
+Por las definiciones del modelo, sabemos que el consumo tiene una forma similar para los arbitrajistas y para los agentes ruidosos. Así, tenemos que
+$$
+C^a_{2t}= r(X_t^a-p_tX_t^a)+p_{t+1}X_t^a-pX_t^a= [r+p_{t+1}-(1+r)p_t]X_t^a
+$$
+$$
+C^n_{2t}= r(X_t^n-p_tX_t^n)+p_{t+1}X_t^n-pX_t^n= [r+p_{t+1}-(1+r)p_t]X_t^n.
+$$
+
+Ahora bien, la diferencia entre ambos agentes estriba en que los agentes ruidosos desplazaron en sus creencias la distribución de $p_{t+1}$, la única variable aleatoria no constante dada la información en t, en $\eta_t$
+$$
+E_t(C^a_{2t})= r(X_t^a-p_tX_t^a)+E_t(p_{t+1})X_t^a-pX_t^a= [r+E(p_{t+1})-(1+r)p_t]X_t^a
+$$
+$$
+Var_t(C^a_{2t})=(X_t^a)^2 Var_t(p_{t+1})
+$$
+
+$$
+E_t(C^n_{2t})= r(X_t^n-p_tX_t^n)+(E_t(p_{t+1})+\eta_t)X_t^n-pX_t^n= [r+E_t(p_{t+1})+\eta_t-(1+r)p_t]X_t^n.
+$$
+$$
+Var_t(C^n_{2t})=(X_t^a)^2 Var_t(p_{t+1})
+$$
+
+Si sucediera que, sin importar el tiempo (es decir, incondicionalmente), los agentes supieran que su consumo distribuye de forma normal, también sabrían que la distribución de los precios futuros ($p_{t+1}$ y subsecuentes) es normal al ser este término la fuente de incertidumbre en el consumo. Esto también tendría por consecuencia que, al ser $p_{t+1}$  lineal en $\eta_{t+1}$, los agentes en $t$ conocen la distribución del ruido en $t+1$ como si estuvieran en ese período. Este argumento también funciona hacia el pasado, por lo que los agentes podrían conocer los valores exactos de la distribución de $p_{t+1}$ y todas las futuras.
+
+
+Si recordamos que en el equilibrio encontrado los arbitrajistas y los agentes ruidosos  limitan su demanda porque hay incertidumbre respecto a $p_{t+1}$, al desaparecer esta incertidumbre ambos intentarían hacer apuestas infinitas el uno contra el otro. De tal modo, no habría un estado estacionario como el encontrado en el texto.
+
+Por otro lado, si lo queremos ver más directamente: si analizamos la información del consumo en $2t$ de cualquiera de los agentes sin usar la información disponible en $t$, ambos precios $p_t$ y $p_{t+1}$ se vuelven variables aleatorias no constantes. Así, hace falta información para decir que cualquiera de los consumos se comporta normal.
+
+#### (b) Explain in a sentence or two why the analysis in the text, which uses the properties of lognormal distributions, is nonetheless correct.
+Porque en el texto se utiliza la información condicional al tiempo t, lo cual no causa contradicciones con la búsqueda del equilibrio estacionario; una vez que se asume $C_t|t$ es normal, se sigue inmediatamente que la esperanza de la función de utilidad es log-normal. También podemos entenderlo como que en general la utilidad del consumo de los agentes depende positivamente de su consumo medio y negativamente de la varianza del consumo (esto último, como la incertidumbre es el precio del siguiente período, significa que depende negativamente de la varianza del precio futuro, pues le permite invertir menos y obtener menos utilidad), por lo que la intuición se modela correctamente con la distribución log normal.
+
 
 ## Ejercicio 2. Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez": [2 horas, 1 puntos cada inciso]
 
@@ -130,7 +243,7 @@ Para complementar el análisis, presentamos la figura anterior que muestra el co
 
 Para el caso de la esquina superior derecha tenemos el comportamiento de los componentes de acreedores, donde la participación se concentra en el Banco de México y la banca de desarrollo. Para el caso del financiamiento interno, también tenemos lo mismo que en el caso anterior. Finalmente, no existe una desagregación para el financiamiento externo, que se presenta en la esquina inferior derecha.
 
-## (b)
+### (b)
 **Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
 Para el desarrollo de este inciso se utilizó información sobre la cartera vigente otorgada al sector privado no bancario . En específico, se uso la cartera vigente total por destino de crédito que se divide en las siguientes categorías:
@@ -168,7 +281,7 @@ datb %>% select(Fecha, Consumo, Vivienda, Empresarial) %>% gather(variable, valu
 
 
 
-##(c)
+### (c)
 **Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y porqué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
 
 
@@ -206,7 +319,7 @@ Por otro lado, en el caso de la periodicidad de las fuentes de fondeo de la banc
 
 Dado el comportamiento particular de ambos casos podemos rescatar una idea central que propone el modelo Diamon-Dybvig, donde la probabilidad de una corrida bancaria aumenta en función del descalce de la madurez entre los pasivos y activos del sistema bancario. En el siguiente inciso haremos un análisis más exhaustivo de las implicaciones que puede tener que se presente a largo plazo y se fondeé a corto plazo, dentro del modelo mencionado anteriormente.
 
-## (d)
+### (d)
 **Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
 
 Como mencionamos anteriormente, existe una transformación de madurez de la banca comercial, esto quiere decir que reciben fondeo de corto plazo y lo invierten en proyectos de largo plazo. A este fenómeno se le conoce como *Maturity mismatch*, lo que quiere decir que hay descalce de vencimientos. El modelo Diamond-Dybvig plantea que hay una demanda de activos que se asemejan a los depósitos a la vista tradicionales. Es decir, los activos se pueden retirar en cualquier momento.
@@ -217,7 +330,7 @@ Adicionalmente, deberíamos revisar cual es el valor de sus deberes y haberes, l
 
 Es probable, que en caso de una posible corrida bancaria el Banco de México inyecte liquidez suficiente para controlar el temor de los depositantes tal y como se observamos en abril de 2020.
 
-## (e)
+### (e)
 **A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
 
 A partir de la información publicada por el Banco de México sobre la cartera vigente otorgada al sector privado no bancario (CF835), se obtuvo información sobre el crédito destinado a vivienda; que se divide en crédito a vivienda de interés social y crédito para vivienda media y residencial.
